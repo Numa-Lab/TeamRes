@@ -1,5 +1,7 @@
 name: Teamres
-version: '${project.version}'
+version: '${version}'
 main: net.kunmc.lab.teamres.Teamres
 api-version: 1.16
 authors: [ Bun133 ]
+commands:
+  teamres:
