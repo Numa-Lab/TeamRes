@@ -32,8 +32,8 @@ repositories {
 
 dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
-    compileOnly('org.jetbrains.kotlin:kotlin-reflect:1.6.0')
-    compileOnly('com.flylib:flylib3:3.0.9')
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.6.0'
+    implementation 'com.flylib:flylib3:3.0.10'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
@@ -71,12 +71,18 @@ compileTestKotlin {
         jvmTarget = "1.8"
     }
 }
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
 
 task deleteInLibsAndServer {
     delete("libs/*.jar")
     delete("../../server/plugins/*.jar")
 }
-
 
 task buildAndCopy(type: Copy) {
     from layout.buildDirectory.dir("libs")
@@ -85,4 +91,4 @@ task buildAndCopy(type: Copy) {
 }
 
 compileKotlin.dependsOn deleteInLibsAndServer
-buildAndCopy.dependsOn build
+buildAndCopy.dependsOn jar

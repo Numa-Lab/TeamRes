@@ -3,10 +3,9 @@ package net.kunmc.lab.teamres
 import com.flylib.flylib3.FlyLibPlugin
 import com.flylib.flylib3.event.ex.FCommandEvent
 import com.flylib.flylib3.util.command
-import net.kunmc.lab.teamres.syncable.Syncable
 import net.kunmc.lab.teamres.syncable.Syncables
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
-import org.bukkit.OfflinePlayer
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -18,7 +17,7 @@ class Teamres : FlyLibPlugin() {
     override fun enable() {
         command("teamres") {
             part<Syncables>(
-                Syncable::class.createType(),
+                Syncables::class.createType(),
                 { _: CommandSender, _: Command, _: String, _: Array<out String> ->
                     Syncables.values().toList()
                 },
@@ -31,7 +30,7 @@ class Teamres : FlyLibPlugin() {
                     OnOff::class.createType(),
                     { _: CommandSender, _: Command, _: String, _: Array<out String> -> listOf(OnOff.ON, OnOff.OFF) },
                     { OnOff.getByString(it) },
-                    { true }
+                    lazyMatcher = { true }
                 ) {
                     terminal {
                         // TODO Set State of Syncable
@@ -46,7 +45,7 @@ class Teamres : FlyLibPlugin() {
                     ResTeam::class.createType(),
                     { _: CommandSender, _: Command, _: String, _: Array<out String> -> teamManager.teams() },
                     { teamManager.getTeamByName(it) },
-                    { true }
+                    lazyMatcher = { true }
                 ) {
                     part<Player>(
                         Player::class.createType(),
@@ -54,9 +53,33 @@ class Teamres : FlyLibPlugin() {
                             Bukkit.getOnlinePlayers().toList()
                         },
                         { Bukkit.getOnlinePlayers().find { p -> p.name == it } },
-                        { true }) {
+                        lazyMatcher = { true }) {
                         terminal {
                             execute(this@Teamres::addToTeam)
+                            permission { commandSender, _, _, _ -> commandSender.isOp }
+                        }
+                    }
+                }
+            }
+
+            part("registerTeam") {
+                part<String>(
+                    String::class.createType(),
+                    { _: CommandSender, _: Command, _: String, _: Array<out String> -> listOf("TEAMNAME") },
+                    { it },
+                    lazyMatcher = { true }) {
+                    part<Player>(
+                        Player::class.createType(),
+                        lazyValues = { _: CommandSender, _: Command, _: String, _: Array<out String> ->
+                            Bukkit.getOnlinePlayers().toList()
+                        },
+                        lazyTabCompleter = { it.name },
+                        lazyParser = { Bukkit.getOnlinePlayers().find { p -> p.name == it } },
+                        lazyMatcher = { true }
+                    ) {
+                        terminal {
+                            execute(this@Teamres::registerTeam)
+                            permission { commandSender, _, _, _ -> commandSender.isOp }
                         }
                     }
                 }
@@ -64,13 +87,18 @@ class Teamres : FlyLibPlugin() {
         }
     }
 
-    private fun setSync(e: FCommandEvent, syncable: Syncable, onOff: OnOff): Boolean {
-        teamManager.setSync(syncable, onOff)
+    fun setSync(e: FCommandEvent, syncable: Syncables, onOff: OnOff): Boolean {
+        teamManager.setSync(syncable.syncable, onOff)
         return true
     }
 
-    private fun addToTeam(e: FCommandEvent, team: ResTeam, player: Player): Boolean {
+    fun addToTeam(e: FCommandEvent, str: String, team: ResTeam, player: Player): Boolean {
         team.add(player)
+        return true
+    }
+
+    fun registerTeam(e: FCommandEvent, str: String, teamName: String, leader: Player): Boolean {
+        teamManager.genTeam(Component.text(teamName), leader)
         return true
     }
 

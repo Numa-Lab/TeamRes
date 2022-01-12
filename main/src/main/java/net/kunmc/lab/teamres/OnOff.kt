@@ -16,6 +16,6 @@ class OnOff(val isOn: Boolean) {
         }
 
         val ON = OnOff(true)
-        val OFF = OnOff(true)
+        val OFF = OnOff(false)
     }
 }
