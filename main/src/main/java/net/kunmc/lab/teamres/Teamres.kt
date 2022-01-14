@@ -49,10 +49,11 @@ class Teamres : FlyLibPlugin() {
                 ) {
                     part<Player>(
                         Player::class.createType(),
-                        { _: CommandSender, _: Command, _: String, _: Array<out String> ->
+                        lazyValues = { _: CommandSender, _: Command, _: String, _: Array<out String> ->
                             Bukkit.getOnlinePlayers().toList()
                         },
-                        { Bukkit.getOnlinePlayers().find { p -> p.name == it } },
+                        lazyParser = { Bukkit.getOnlinePlayers().find { p -> p.name == it } },
+                        lazyTabCompleter = { it.name },
                         lazyMatcher = { true }) {
                         terminal {
                             execute(this@Teamres::addToTeam)
@@ -65,8 +66,9 @@ class Teamres : FlyLibPlugin() {
             part("registerTeam") {
                 part<String>(
                     String::class.createType(),
-                    { _: CommandSender, _: Command, _: String, _: Array<out String> -> listOf("TEAMNAME") },
-                    { it },
+                    lazyValues = { _: CommandSender, _: Command, _: String, _: Array<out String> -> listOf("teamname") },
+                    lazyParser = { it },
+                    lazyTabCompleter = { it },
                     lazyMatcher = { true }) {
                     part<Player>(
                         Player::class.createType(),
@@ -94,11 +96,13 @@ class Teamres : FlyLibPlugin() {
 
     fun addToTeam(e: FCommandEvent, str: String, team: ResTeam, player: Player): Boolean {
         team.add(player)
+        e.commandSender.sendMessage("Player:${player} is registered to team:${team}")
         return true
     }
 
     fun registerTeam(e: FCommandEvent, str: String, teamName: String, leader: Player): Boolean {
         teamManager.genTeam(Component.text(teamName), leader)
+        e.commandSender.sendMessage("Team:${teamName} is registered with leader:${leader}")
         return true
     }
 

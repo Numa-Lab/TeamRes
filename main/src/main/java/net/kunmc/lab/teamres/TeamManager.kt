@@ -6,6 +6,7 @@ import com.flylib.flylib3.util.event
 import com.flylib.flylib3.util.ready
 import net.kunmc.lab.teamres.syncable.Syncable
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.event.player.PlayerJoinEvent
@@ -15,7 +16,7 @@ class TeamManager(override val flyLib: FlyLib) : FlyLibComponent {
     private val teams = mutableListOf<ResTeamImpl>()
 
     fun getTeamByName(name: String): ResTeamImpl? {
-        return teams.find { it.teamName.toString() == name }
+        return teams.find { it.toString() == name }
     }
 
     fun teams() = teams.toList()
@@ -100,6 +101,8 @@ final class ResTeamImpl(
     }
 
     override fun add(p: OfflinePlayer) {
+        if(all().contains(p)) return
+
         affected().forEach {
             it.startSync(this, p)
         }
@@ -108,6 +111,8 @@ final class ResTeamImpl(
     }
 
     override fun remove(p: OfflinePlayer) {
+        if (!all().contains(p)) return
+
         affected().forEach {
             it.endSync(this, p)
         }
@@ -129,6 +134,9 @@ final class ResTeamImpl(
     }
 
     override fun toString(): String {
+        if (this.teamName is TextComponent) {
+            return this.teamName.content()
+        }
         return this.teamName.toString()
     }
 }
