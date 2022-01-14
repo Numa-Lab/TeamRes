@@ -5,6 +5,7 @@ import com.flylib.flylib3.FlyLibComponent
 import com.flylib.flylib3.util.event
 import com.flylib.flylib3.util.ready
 import net.kunmc.lab.teamres.syncable.Syncable
+import net.kunmc.lab.teamres.util.SessionSafePlayer
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.Bukkit
@@ -19,11 +20,11 @@ class TeamManager(override val flyLib: FlyLib) : FlyLibComponent {
         return teams.find { it.toString() == name }
     }
 
-    fun getTeam(p: OfflinePlayer): ResTeamImpl? = teams.find { it.all().contains(p) }
+    fun getTeam(p: SessionSafePlayer): ResTeamImpl? = teams.find { it.all().contains(p) }
 
     fun teams() = teams.toList()
 
-    fun genTeam(teamName: Component, leader: OfflinePlayer, vararg members: OfflinePlayer): ResTeam {
+    fun genTeam(teamName: Component, leader: SessionSafePlayer, vararg members: SessionSafePlayer): ResTeam {
         val team = ResTeamImpl(leader, members.toList(), teamName, flyLib)
         teams.add(team)
         return team
@@ -42,8 +43,8 @@ class TeamManager(override val flyLib: FlyLib) : FlyLibComponent {
  * @note Even if the player in this team gets offline,the player will not be removed from the team.
  */
 final class ResTeamImpl(
-    leader: OfflinePlayer,
-    members: List<OfflinePlayer>,
+    leader: SessionSafePlayer,
+    members: List<SessionSafePlayer>,
     val teamName: Component,
     override val flyLib: FlyLib
 ) : ResTeam, FlyLibComponent {
@@ -66,23 +67,23 @@ final class ResTeamImpl(
     private fun registerTasks() {
         event<PlayerJoinEvent, Unit> {
             // Player join event
-            if (all().contains(it.player)) {
+            if (all().contains(SessionSafePlayer(it.player))) {
                 // If player is in team, need to effect
                 affected().forEach { s ->
-                    s.startSync(this@ResTeamImpl, it.player)
+                    s.startSync(this@ResTeamImpl, SessionSafePlayer(it.player))
                 }
             }
         }
 
         event<PlayerQuitEvent, Unit> {
             // Player quit event
-            if (all().contains(it.player)) {
+            if (all().contains(SessionSafePlayer(it.player))) {
                 // If player is in team, need to effect
                 affected().forEach { s ->
-                    s.endSync(this@ResTeamImpl, it.player)
+                    s.endSync(this@ResTeamImpl, SessionSafePlayer(it.player))
                 }
 
-                if (led == it.player) {
+                if (led == SessionSafePlayer(it.player)) {
                     // If player is leader, need to make notice to change leader
                     Bukkit.broadcast(teamName.append(Component.text("のリーダーが退出しました")))
                 }
@@ -90,19 +91,19 @@ final class ResTeamImpl(
         }
     }
 
-    override fun all(): List<OfflinePlayer> = listOf(led, *(mes.toTypedArray()))
+    override fun all(): List<SessionSafePlayer> = listOf(led, *(mes.toTypedArray()))
 
-    override fun getMembers(): List<OfflinePlayer> = mes.toList()
+    override fun getMembers(): List<SessionSafePlayer> = mes.toList()
 
-    override fun getLeader(): OfflinePlayer = led
+    override fun getLeader(): SessionSafePlayer = led
 
-    override fun changeLeader(next: OfflinePlayer) {
+    override fun changeLeader(next: SessionSafePlayer) {
         remove(led)
         add(next)
         led = next
     }
 
-    override fun add(p: OfflinePlayer) {
+    override fun add(p: SessionSafePlayer) {
         if (all().contains(p)) return
 
         affected().forEach {
@@ -112,7 +113,7 @@ final class ResTeamImpl(
         mes = listOf(p, *(mes.toTypedArray()))
     }
 
-    override fun remove(p: OfflinePlayer) {
+    override fun remove(p: SessionSafePlayer) {
         if (!all().contains(p)) return
 
         affected().forEach {

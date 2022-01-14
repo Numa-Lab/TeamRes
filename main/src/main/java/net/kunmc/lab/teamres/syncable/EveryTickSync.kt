@@ -6,6 +6,7 @@ import com.flylib.flylib3.util.ready
 import net.kunmc.lab.teamres.ResTeam
 import net.kunmc.lab.teamres.ResTeamImpl
 import net.kunmc.lab.teamres.TeamManager
+import net.kunmc.lab.teamres.util.SessionSafePlayer
 import org.bukkit.OfflinePlayer
 
 open class EveryTickSync(
@@ -33,7 +34,7 @@ open class EveryTickSync(
     }
 
     private fun map(p: OfflinePlayer): Pair<ResTeamImpl, OfflinePlayer>? {
-        val team = teamManager.getTeam(p)
+        val team = teamManager.getTeam(SessionSafePlayer(p))
         if (team != null) {
             return Pair(team, p)
         }
@@ -41,13 +42,13 @@ open class EveryTickSync(
     }
 
     open val syncedPlayers = mutableSetOf<OfflinePlayer>()
-    override fun startSync(team: ResTeam, p: OfflinePlayer) {
-        syncedPlayers.add(p)
-        start(team, p)
+    override fun startSync(team: ResTeam, p: SessionSafePlayer) {
+        syncedPlayers.add(p.offlinePlayer())
+        start(team, p.offlinePlayer())
     }
 
-    override fun endSync(team: ResTeam, p: OfflinePlayer) {
-        syncedPlayers.remove(p)
-        end(team, p)
+    override fun endSync(team: ResTeam, p: SessionSafePlayer) {
+        syncedPlayers.remove(p.offlinePlayer())
+        end(team, p.offlinePlayer())
     }
 }

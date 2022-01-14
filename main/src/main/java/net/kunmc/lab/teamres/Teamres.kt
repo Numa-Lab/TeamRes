@@ -4,6 +4,7 @@ import com.flylib.flylib3.FlyLibPlugin
 import com.flylib.flylib3.event.ex.FCommandEvent
 import com.flylib.flylib3.util.command
 import net.kunmc.lab.teamres.syncable.Syncables
+import net.kunmc.lab.teamres.util.SessionSafePlayer
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
@@ -95,13 +96,13 @@ class Teamres : FlyLibPlugin() {
     }
 
     fun addToTeam(e: FCommandEvent, str: String, team: ResTeam, player: Player): Boolean {
-        team.add(player)
+        team.add(SessionSafePlayer(player))
         e.commandSender.sendMessage("Player:${player} is registered to team:${team}")
         return true
     }
 
     fun registerTeam(e: FCommandEvent, str: String, teamName: String, leader: Player): Boolean {
-        teamManager.genTeam(Component.text(teamName), leader)
+        teamManager.genTeam(Component.text(teamName), SessionSafePlayer(leader))
         e.commandSender.sendMessage("Team:${teamName} is registered with leader:${leader}")
         return true
     }

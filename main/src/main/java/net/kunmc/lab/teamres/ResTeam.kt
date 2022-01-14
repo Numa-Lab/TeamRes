@@ -1,6 +1,7 @@
 package net.kunmc.lab.teamres
 
 import net.kunmc.lab.teamres.syncable.Syncable
+import net.kunmc.lab.teamres.util.SessionSafePlayer
 import org.bukkit.OfflinePlayer
 
 /**
@@ -10,32 +11,32 @@ interface ResTeam {
     /**
      * @return all players in this team
      */
-    fun all(): List<OfflinePlayer>
+    fun all(): List<SessionSafePlayer>
 
     /**
      * @return all members in this team that are online
      */
-    fun getMembers(): List<OfflinePlayer>
+    fun getMembers(): List<SessionSafePlayer>
 
     /**
      * @return leader of this team
      */
-    fun getLeader(): OfflinePlayer
+    fun getLeader(): SessionSafePlayer
 
     /**
      * Change leader of this team to [next]
      */
-    fun changeLeader(next: OfflinePlayer)
+    fun changeLeader(next: SessionSafePlayer)
 
     /**
      * Add OfflinePlayer to this team
      */
-    fun add(p: OfflinePlayer)
+    fun add(p: SessionSafePlayer)
 
     /**
      * Remove OfflinePlayer from this team
      */
-    fun remove(p: OfflinePlayer)
+    fun remove(p: SessionSafePlayer)
 
     /**
      * @return all affected syncable entry

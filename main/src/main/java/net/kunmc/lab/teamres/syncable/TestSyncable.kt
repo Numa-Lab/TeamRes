@@ -7,6 +7,7 @@ import com.flylib.flylib3.util.event
 import com.flylib.flylib3.util.filter
 import com.flylib.flylib3.util.info
 import net.kunmc.lab.teamres.ResTeam
+import net.kunmc.lab.teamres.util.SessionSafePlayer
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerMoveEvent
@@ -19,11 +20,11 @@ class TestSyncable(override val flyLib: FlyLib) : Syncable, FlyLibComponent {
         }
     }
 
-    override fun startSync(team: ResTeam, p: OfflinePlayer) {
+    override fun startSync(team: ResTeam, p: SessionSafePlayer) {
         info("startSync#Player")
         event<PlayerMoveEvent, PlayerMoveEvent> {
             it
-        }.filter { e: PlayerMoveEvent, _: FRunnableContext -> e.player == p }
+        }.filter { e: PlayerMoveEvent, _: FRunnableContext -> SessionSafePlayer(e.player) == p }
             .then { it.player.sendMessage("You are in team:${team},and moved") }
     }
 
@@ -34,10 +35,10 @@ class TestSyncable(override val flyLib: FlyLib) : Syncable, FlyLibComponent {
         }
     }
 
-    override fun endSync(team: ResTeam, p: OfflinePlayer) {
+    override fun endSync(team: ResTeam, p: SessionSafePlayer) {
         info("endSync#Player")
-        if (p is Player) {
-            p.sendMessage("You are now end")
+        if (p.isOnline) {
+            p.player()!!.sendMessage("You are now end")
         }
     }
 }

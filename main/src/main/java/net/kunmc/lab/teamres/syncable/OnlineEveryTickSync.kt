@@ -5,6 +5,7 @@ import com.flylib.flylib3.util.everyTick
 import net.kunmc.lab.teamres.ResTeam
 import net.kunmc.lab.teamres.ResTeamImpl
 import net.kunmc.lab.teamres.TeamManager
+import net.kunmc.lab.teamres.util.SessionSafePlayer
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 
@@ -27,47 +28,57 @@ open class OnlineEveryTickSync(
             syncedOnlinePlayers.filter { it.isOnline }.mapNotNull { map(it) }
         }.then {
             it.forEach { p ->
-                everyTick(p.first, p.second, p.third)
+                if (p.second.isOnline && p.third.isOnline) {
+                    everyTick(p.first, p.second.player()!!, p.third.player()!!)
+                }
             }
         }
     }
 
-    private fun map(p: Player): Triple<ResTeamImpl, Player, Player>? {
+    private fun map(p: SessionSafePlayer): Triple<ResTeamImpl, SessionSafePlayer, SessionSafePlayer>? {
         if (!p.isOnline) return null
         val team = teamManager.getTeam(p)
         if (team != null) {
             val leader = team.getLeader()
-            if (leader !is Player || !leader.isOnline) return null
+            if (!leader.isOnline) return null
             return Triple(team, leader, p)
         }
         return null
     }
 
-    private val syncedOnlinePlayers = mutableSetOf<Player>()
+    private val syncedOnlinePlayers = mutableSetOf<SessionSafePlayer>()
 
-    override fun startSync(team: ResTeam, p: OfflinePlayer) {
-        if (p.isOnline && p is Player) {
-            val t = teamManager.getTeam(p)
-            if (t != null) {
-                val leader = t.getLeader()
-                if (leader is Player && leader.isOnline) {
-                    syncedOnlinePlayers.add(p)
-                    start(t, leader, p)
-                }
-            }
+    override fun startSync(team: ResTeam, p: SessionSafePlayer) {
+        val e = map(p)
+        if (e != null && team == e.first) {
+            start(e.first, e.second.player()!!, e.third.player()!!)
         }
+//        if (p.isOnline) {
+//            val t = teamManager.getTeam(p)
+//            if (t != null) {
+//                val leader = t.getLeader()
+//                if (leader.isOnline) {
+//                    syncedOnlinePlayers.add(p)
+//                    start(t, leader.player()!!, p.player()!!)
+//                }
+//            }
+//        }
     }
 
-    override fun endSync(team: ResTeam, p: OfflinePlayer) {
-        if (p.isOnline && p is Player) {
-            val t = teamManager.getTeam(p)
-            if (t != null) {
-                val leader = t.getLeader()
-                if (leader is Player && leader.isOnline) {
-                    syncedOnlinePlayers.remove(p)
-                    end(team, leader, p)
-                }
-            }
+    override fun endSync(team: ResTeam, p: SessionSafePlayer) {
+        val e = map(p)
+        if (e != null && team == e.first) {
+            end(e.first, e.second.player()!!, e.third.player()!!)
         }
+//        if (p.isOnline) {
+//            val t = teamManager.getTeam(p)
+//            if (t != null) {
+//                val leader = t.getLeader()
+//                if (leader.isOnline) {
+//                    syncedOnlinePlayers.remove(p)
+//                    end(team, leader.player()!!, p.player()!!)
+//                }
+//            }
+//        }
     }
 }
