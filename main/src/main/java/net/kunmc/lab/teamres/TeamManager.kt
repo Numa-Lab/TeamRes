@@ -19,6 +19,8 @@ class TeamManager(override val flyLib: FlyLib) : FlyLibComponent {
         return teams.find { it.toString() == name }
     }
 
+    fun getTeam(p: OfflinePlayer): ResTeamImpl? = teams.find { it.all().contains(p) }
+
     fun teams() = teams.toList()
 
     fun genTeam(teamName: Component, leader: OfflinePlayer, vararg members: OfflinePlayer): ResTeam {
@@ -101,7 +103,7 @@ final class ResTeamImpl(
     }
 
     override fun add(p: OfflinePlayer) {
-        if(all().contains(p)) return
+        if (all().contains(p)) return
 
         affected().forEach {
             it.startSync(this, p)

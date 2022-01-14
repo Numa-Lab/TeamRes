@@ -90,7 +90,7 @@ class Teamres : FlyLibPlugin() {
     }
 
     fun setSync(e: FCommandEvent, syncable: Syncables, onOff: OnOff): Boolean {
-        teamManager.setSync(syncable.syncable, onOff)
+        teamManager.setSync(syncable.lazy.get(Pair(flyLib, teamManager)), onOff)
         return true
     }
 
