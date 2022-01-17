@@ -24,8 +24,8 @@ class TeamManager(override val flyLib: FlyLib) : FlyLibComponent {
 
     fun teams() = teams.toList()
 
-    fun genTeam(teamName: Component, leader: SessionSafePlayer, vararg members: SessionSafePlayer): ResTeam {
-        val team = ResTeamImpl(leader, members.toList(), teamName, flyLib)
+    fun genTeam(teamName: Component, vararg members: SessionSafePlayer): ResTeam {
+        val team = ResTeamImpl(members.toList(), teamName, flyLib)
         teams.add(team)
         return team
     }
@@ -43,7 +43,6 @@ class TeamManager(override val flyLib: FlyLib) : FlyLibComponent {
  * @note Even if the player in this team gets offline,the player will not be removed from the team.
  */
 final class ResTeamImpl(
-    leader: SessionSafePlayer,
     members: List<SessionSafePlayer>,
     val teamName: Component,
     override val flyLib: FlyLib
@@ -53,11 +52,6 @@ final class ResTeamImpl(
             registerTasks()
         }
     }
-
-    /**
-     * Internal Leader variable
-     */
-    private var led = leader
 
     /**
      * Internal Members variable
@@ -82,26 +76,13 @@ final class ResTeamImpl(
                 affected().forEach { s ->
                     s.endSync(this@ResTeamImpl, SessionSafePlayer(it.player))
                 }
-
-                if (led == SessionSafePlayer(it.player)) {
-                    // If player is leader, need to make notice to change leader
-                    Bukkit.broadcast(teamName.append(Component.text("のリーダーが退出しました")))
-                }
             }
         }
     }
 
-    override fun all(): List<SessionSafePlayer> = listOf(led, *(mes.toTypedArray()))
+    override fun all(): List<SessionSafePlayer> = mes.toList()
 
     override fun getMembers(): List<SessionSafePlayer> = mes.toList()
-
-    override fun getLeader(): SessionSafePlayer = led
-
-    override fun changeLeader(next: SessionSafePlayer) {
-        remove(led)
-        add(next)
-        led = next
-    }
 
     override fun add(p: SessionSafePlayer) {
         if (all().contains(p)) return

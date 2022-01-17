@@ -19,16 +19,6 @@ interface ResTeam {
     fun getMembers(): List<SessionSafePlayer>
 
     /**
-     * @return leader of this team
-     */
-    fun getLeader(): SessionSafePlayer
-
-    /**
-     * Change leader of this team to [next]
-     */
-    fun changeLeader(next: SessionSafePlayer)
-
-    /**
      * Add OfflinePlayer to this team
      */
     fun add(p: SessionSafePlayer)

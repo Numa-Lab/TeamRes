@@ -32,4 +32,8 @@ class SessionSafePlayer(val uuid: UUID) {
         }
         return false
     }
+
+    override fun hashCode(): Int {
+        return uuid.hashCode()
+    }
 }
