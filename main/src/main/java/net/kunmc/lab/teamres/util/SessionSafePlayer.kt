@@ -1,5 +1,7 @@
 package net.kunmc.lab.teamres.util
 
+import com.flylib.flylib3.FlyLib
+import org.bukkit.BanList
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
@@ -36,4 +38,24 @@ class SessionSafePlayer(val uuid: UUID) {
     override fun hashCode(): Int {
         return uuid.hashCode()
     }
+
+
+    /////// BAN ///////
+    fun ban(reason: String?, expires: java.util.Date?, source: String?, kickIfOnline: Boolean?) =
+        offlinePlayer().banPlayer(reason, expires, source)
+
+    /**
+     * @note IPBan is not supported.
+     */
+    fun unban(flyLib: FlyLib) {
+        val nameBAN = flyLib.plugin.server.getBanList(BanList.Type.NAME)
+        val name = offlinePlayer().name
+        if (name != null) {
+            nameBAN.pardon(name)
+        } else {
+            flyLib.log.warn("[SessionSafePlayer] unban failed. name is null.")
+        }
+        // Not Implemented for IPBan
+    }
+    /////// BAN ///////
 }

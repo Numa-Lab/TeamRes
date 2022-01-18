@@ -28,7 +28,7 @@ class HealthSync(flyLib: FlyLib, teamManager: TeamManager) : BaseSync(flyLib, te
 
     @EventHandler
     fun onHeal(e: PlayerHealEvent) {
-        info("onHeal")
+        info("[HealthSync]onHeal")
         val pair = getWithPlayer(e.p) ?: return
         // Player is in syncedPlayer and teamManager
         syncHealth(pair)
@@ -36,7 +36,7 @@ class HealthSync(flyLib: FlyLib, teamManager: TeamManager) : BaseSync(flyLib, te
 
     @EventHandler
     fun onDamage(e: PlayerDamageEvent) {
-        info("onDamage")
+        info("[HealthSync]onDamage")
         val pair = getWithPlayer(e.p) ?: return
         // Player is in syncedPlayer and teamManager
         syncHealth(pair)

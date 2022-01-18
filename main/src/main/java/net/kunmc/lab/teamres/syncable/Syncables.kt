@@ -11,7 +11,6 @@ import net.kunmc.lab.teamres.util.lazyInit
  * Enum of all syncable types.
  */
 enum class Syncables(val displayName: String, val lazy: LazyWithInit<Syncable, Pair<FlyLib, TeamManager>>) {
-    Test("Test", lazyInit { TestSyncable(it.first) }),
     Health("体力", lazyInit { HealthSync(it.first, it.second) }),
     Ban("BAN", lazyInit { BANSync(it.first, it.second) }),
     ;

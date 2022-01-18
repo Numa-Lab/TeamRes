@@ -71,12 +71,12 @@ final class ResTeamImpl(
 
         event<PlayerQuitEvent, Unit> {
             // Player quit event
-            if (all().contains(SessionSafePlayer(it.player))) {
+//            if (all().contains(SessionSafePlayer(it.player))) {
                 // If player is in team, need to effect
-                affected().forEach { s ->
-                    s.endSync(this@ResTeamImpl, SessionSafePlayer(it.player))
-                }
-            }
+//                affected().forEach { s ->
+//                    s.endSync(this@ResTeamImpl, SessionSafePlayer(it.player))
+//                }
+//            }
         }
     }
 

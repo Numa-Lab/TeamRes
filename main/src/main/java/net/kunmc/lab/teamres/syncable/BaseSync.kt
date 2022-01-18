@@ -14,11 +14,27 @@ import org.bukkit.entity.Player
 open class BaseSync(override val flyLib: FlyLib, open val teamManager: TeamManager) : Syncable, FlyLibComponent {
     public val syncedPlayer = mutableListOf<SessionSafePlayer>()
 
+    /**
+     * @return Pair(Player,Team)
+     */
     fun getWithPlayer(p: Player): Pair<Player, ResTeamImpl>? {
         val sf = SessionSafePlayer(p)
         if (!syncedPlayer.contains(sf)) return null
         else {
             val team = teamManager.getTeam(sf)
+            if (team != null) {
+                return Pair(p, team)
+            } else {
+                return null
+            }
+        }
+    }
+
+    fun getWithSessionSafePlayer(p: SessionSafePlayer): Pair<SessionSafePlayer, ResTeamImpl>? {
+        if (!syncedPlayer.contains(p)) {
+            return null
+        } else {
+            val team = teamManager.getTeam(p)
             if (team != null) {
                 return Pair(p, team)
             } else {
