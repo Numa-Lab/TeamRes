@@ -2,6 +2,7 @@ package net.kunmc.lab.teamres.util.ex
 
 import com.flylib.flylib3.FlyLib
 import com.flylib.flylib3.FlyLibComponent
+import com.flylib.flylib3.util.info
 import com.flylib.flylib3.util.nextTick
 import com.flylib.flylib3.util.ready
 import net.kunmc.lab.teamres.util.SessionSafePlayer
@@ -50,10 +51,10 @@ class TeamResEventEx(override val flyLib: FlyLib) : FlyLibComponent, Listener {
     }
 
     @EventHandler
-    fun playerPreCommand(e: PlayerCommandSendEvent) {
-        if (e.commands.isNotEmpty()) {
-            when (e.commands.toTypedArray()[0]) {
-                "pardon" -> {
+    fun playerPreCommand(e: PlayerCommandPreprocessEvent) {
+        if (e.message.isNotEmpty()) {
+            when (e.message.split(" ")[0]) {
+                "/pardon", "/pardon-ip" -> {
                     // Pardon Command
                     invokeUnBanEvent(e.player as CommandSender)
                 }
@@ -64,7 +65,7 @@ class TeamResEventEx(override val flyLib: FlyLib) : FlyLibComponent, Listener {
     @EventHandler
     fun npPreCommand(e: ServerCommandEvent) {
         when (e.command) {
-            "pardon" -> {
+            "pardon", "pardon-ip" -> {
                 // Pardon Command
                 invokeUnBanEvent(e.sender as CommandSender)
             }
@@ -75,10 +76,14 @@ class TeamResEventEx(override val flyLib: FlyLib) : FlyLibComponent, Listener {
      * Collect Ban List,then wait 1 tick,Collect Ban List and compare them.
      */
     private fun invokeUnBanEvent(sender: CommandSender) {
+        info("[ExEvent-Ban]Ban List Collecting...")
         val beforeBan = Bukkit.getBannedPlayers().map { SessionSafePlayer(it) }
         nextTick {
             val afterBan = Bukkit.getBannedPlayers().map { SessionSafePlayer(it) }
             val differ = beforeBan.minus(afterBan.toSet())
+            info("[ExEvent-Ban]Ban List changed,differ:$differ")
+            info("[ExEvent-Ban]After Ban List:$afterBan")
+            info("[ExEvent-Ban]Before Ban List:$beforeBan")
             if (differ.isNotEmpty()) {
                 differ.forEach { sf ->
                     flyLib.event.callEvent(PlayerUnbannedEvent(sf.offlinePlayer(), sender))
