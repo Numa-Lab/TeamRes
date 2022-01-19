@@ -44,13 +44,18 @@ class HealthSync(flyLib: FlyLib, teamManager: TeamManager) : BaseSync(flyLib, te
          * Potion damage is reflected next tick
          */
         nextTick {
-            pair.second.all()
+            val onlinePlayers = pair.second.all()
                 .filter { it != SessionSafePlayer(pair.first) && it.isOnline }
                 .map { it.player()!! }
-                .forEach {
-                    info("Syncing from ${pair.first.name} to ${it.name}")
-                    it.health = min(it.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value, pair.first.health)
-                }
+
+            val maxHealth = onlinePlayers.maxOf { it.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value }
+
+            // Syncing Health and MaxHealth
+            onlinePlayers.forEach {
+                info("Syncing from ${pair.first.name} to ${it.name}")
+                it.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.baseValue = maxHealth
+                it.health = min(maxHealth, pair.first.health)
+            }
         }
     }
 }
