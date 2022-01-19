@@ -1,13 +1,12 @@
 package net.kunmc.lab.teamres.syncable
 
 import com.flylib.flylib3.FlyLib
-import com.flylib.flylib3.util.event
 import com.flylib.flylib3.util.info
 import com.flylib.flylib3.util.nextTick
 import com.flylib.flylib3.util.ready
-import net.kunmc.lab.teamres.ResTeam
 import net.kunmc.lab.teamres.ResTeamImpl
 import net.kunmc.lab.teamres.TeamManager
+import net.kunmc.lab.teamres.syncable.base.BaseSync
 import net.kunmc.lab.teamres.util.SessionSafePlayer
 import net.kunmc.lab.teamres.util.ex.PlayerDamageEvent
 import net.kunmc.lab.teamres.util.ex.PlayerHealEvent
@@ -15,8 +14,6 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityRegainHealthEvent
-import kotlin.math.max
 import kotlin.math.min
 
 class HealthSync(flyLib: FlyLib, teamManager: TeamManager) : BaseSync(flyLib, teamManager), Listener {

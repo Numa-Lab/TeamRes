@@ -3,9 +3,9 @@ package net.kunmc.lab.teamres.syncable
 import com.flylib.flylib3.FlyLib
 import com.flylib.flylib3.util.info
 import com.flylib.flylib3.util.ready
-import net.kunmc.lab.teamres.ResTeam
 import net.kunmc.lab.teamres.ResTeamImpl
 import net.kunmc.lab.teamres.TeamManager
+import net.kunmc.lab.teamres.syncable.base.BaseSync
 import net.kunmc.lab.teamres.util.SessionSafePlayer
 import net.kunmc.lab.teamres.util.ex.PlayerBannedEvent
 import net.kunmc.lab.teamres.util.ex.PlayerUnbannedEvent

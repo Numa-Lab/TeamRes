@@ -1,10 +1,11 @@
-package net.kunmc.lab.teamres.syncable
+package net.kunmc.lab.teamres.syncable.base
 
 import com.flylib.flylib3.FlyLib
 import com.flylib.flylib3.FlyLibComponent
 import com.flylib.flylib3.util.everyTick
 import net.kunmc.lab.teamres.ResTeam
 import net.kunmc.lab.teamres.TeamManager
+import net.kunmc.lab.teamres.syncable.Syncable
 import net.kunmc.lab.teamres.util.SessionSafePlayer
 import org.bukkit.entity.Player
 
