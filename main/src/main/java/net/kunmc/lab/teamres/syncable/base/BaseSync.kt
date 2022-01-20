@@ -65,7 +65,9 @@ open class BaseSync(override val flyLib: FlyLib, open val teamManager: TeamManag
     }
 
     override fun startSync(team: ResTeam) {
-        syncedPlayer.addAll(team.all())
+        team.all().forEach {
+            startSync(team, it)
+        }
     }
 
     override fun startSync(team: ResTeam, p: SessionSafePlayer) {
@@ -83,6 +85,8 @@ open class BaseSync(override val flyLib: FlyLib, open val teamManager: TeamManag
     }
 
     override fun endSync(team: ResTeam) {
-        syncedPlayer.removeAll(team.all())
+        team.all().forEach {
+            endSync(team, it)
+        }
     }
 }

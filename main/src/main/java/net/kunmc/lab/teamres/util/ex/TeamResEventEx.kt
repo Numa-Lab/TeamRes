@@ -1,5 +1,6 @@
 package net.kunmc.lab.teamres.util.ex
 
+import com.destroystokyo.paper.event.block.BeaconEffectEvent
 import com.flylib.flylib3.FlyLib
 import com.flylib.flylib3.FlyLibComponent
 import com.flylib.flylib3.util.info
@@ -12,9 +13,10 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.EntityPotionEffectEvent
+import org.bukkit.event.entity.EntityPotionEffectEvent.Action.*
 import org.bukkit.event.entity.EntityRegainHealthEvent
 import org.bukkit.event.player.PlayerCommandPreprocessEvent
-import org.bukkit.event.player.PlayerCommandSendEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.server.ServerCommandEvent
 
@@ -90,5 +92,55 @@ class TeamResEventEx(override val flyLib: FlyLib) : FlyLibComponent, Listener {
                 }
             }
         }
+    }
+
+
+    @EventHandler
+    fun onPotion(e: EntityPotionEffectEvent) {
+        if (e.entity is Player) {
+            val event = when (e.action) {
+                ADDED -> PlayerEffectAddedEvent(
+                    e.entity as Player,
+                    e.oldEffect,
+                    e.newEffect!!,
+                    PlayerEffectEvent.Cause.convert(e.cause),
+                    e
+                )
+                CHANGED -> PlayerEffectChangedEvent(
+                    e.entity as Player,
+                    e.oldEffect!!,
+                    e.newEffect!!,
+                    PlayerEffectEvent.Cause.convert(e.cause),
+                    e
+                )
+                CLEARED -> PlayerEffectClearedEvent(
+                    e.entity as Player,
+                    e.oldEffect!!,
+                    PlayerEffectEvent.Cause.convert(e.cause),
+                    e
+                )
+                REMOVED -> PlayerEffectRemovedEvent(
+                    e.entity as Player,
+                    e.oldEffect!!,
+                    PlayerEffectEvent.Cause.convert(e.cause),
+                    e
+                )
+            }
+            // Fire Event
+            flyLib.event.callEvent(event)
+        }
+    }
+
+    @EventHandler
+    fun onBeacon(e: BeaconEffectEvent) {
+        flyLib.event.callEvent(
+            PlayerEffectAddedEvent(
+                e.player,
+                null,
+                e.effect,
+                PlayerEffectEvent.Cause.BEACON,
+                e
+            )
+        )
     }
 }
