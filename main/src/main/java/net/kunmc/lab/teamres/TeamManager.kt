@@ -24,9 +24,19 @@ class TeamManager(override val flyLib: FlyLib) : FlyLibComponent {
 
     fun teams() = teams.toList()
 
-    fun genTeam(teamName: Component, vararg members: SessionSafePlayer): ResTeam {
+    /**
+     * @param addExistSyncables if to add exist syncable from the first team while init team
+     */
+    fun genTeam(teamName: Component, vararg members: SessionSafePlayer, addExistSyncables: Boolean = true): ResTeam {
         val team = ResTeamImpl(members.toList(), teamName, flyLib)
         teams.add(team)
+        if (addExistSyncables) {
+            if (teams.size >= 2) {
+                teams[0].affected().forEach {
+                    team.effect(it, OnOff.ON)
+                }
+            }
+        }
         return team
     }
 
@@ -72,7 +82,7 @@ final class ResTeamImpl(
         event<PlayerQuitEvent, Unit> {
             // Player quit event
 //            if (all().contains(SessionSafePlayer(it.player))) {
-                // If player is in team, need to effect
+            // If player is in team, need to effect
 //                affected().forEach { s ->
 //                    s.endSync(this@ResTeamImpl, SessionSafePlayer(it.player))
 //                }
@@ -87,11 +97,11 @@ final class ResTeamImpl(
     override fun add(p: SessionSafePlayer) {
         if (all().contains(p)) return
 
+        mes = listOf(p, *(mes.toTypedArray()))
+
         affected().forEach {
             it.startSync(this, p)
         }
-
-        mes = listOf(p, *(mes.toTypedArray()))
     }
 
     override fun remove(p: SessionSafePlayer) {
