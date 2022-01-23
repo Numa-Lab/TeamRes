@@ -1,9 +1,7 @@
 package net.kunmc.lab.teamres.syncable
 
-import com.flylib.flylib3.FlyLibComponent
 import net.kunmc.lab.teamres.ResTeam
 import net.kunmc.lab.teamres.util.SessionSafePlayer
-import org.bukkit.OfflinePlayer
 
 /**
  * Syncable in team

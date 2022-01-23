@@ -5,6 +5,18 @@ package net.kunmc.lab.teamres
  */
 class OnOff(val isOn: Boolean) {
     override fun toString() = if (isOn) "on" else "off"
+    override fun equals(other: Any?): Boolean {
+        if (other is OnOff) {
+            return isOn == other.isOn
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return isOn.hashCode()
+    }
+
+    fun toggled() = OnOff(!isOn)
 
     companion object {
         fun getByString(str: String): OnOff? {

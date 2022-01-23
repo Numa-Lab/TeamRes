@@ -6,11 +6,16 @@ import com.flylib.flylib3.FlyLib
 import net.kunmc.lab.teamres.TeamManager
 import net.kunmc.lab.teamres.util.LazyWithInit
 import net.kunmc.lab.teamres.util.lazyInit
+import net.kyori.adventure.text.Component
 
 /**
  * Enum of all syncable types.
  */
-enum class Syncables(val displayName: String, val lazy: LazyWithInit<Syncable, Pair<FlyLib, TeamManager>>) {
+enum class Syncables(
+    val displayName: String,
+    val lazy: LazyWithInit<Syncable, Pair<FlyLib, TeamManager>>,
+    val descriptions: List<Component> = listOf()
+) {
     Health("体力", lazyInit { HealthSync(it.first, it.second) }),
     Ban("BAN", lazyInit { BANSync(it.first, it.second) }),
     Effect("ポーション効果", lazyInit { net.kunmc.lab.teamres.syncable.EffectSync(it.first, it.second) }),
