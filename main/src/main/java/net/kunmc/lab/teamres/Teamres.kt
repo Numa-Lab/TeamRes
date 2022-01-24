@@ -4,6 +4,7 @@ import com.flylib.flylib3.FlyLibPlugin
 import com.flylib.flylib3.event.ex.FCommandEvent
 import com.flylib.flylib3.util.command
 import net.kunmc.lab.teamres.gui.SyncableControlGUI
+import net.kunmc.lab.teamres.gui.TeamControlGUI
 import net.kunmc.lab.teamres.syncable.Syncables
 import net.kunmc.lab.teamres.util.SessionSafePlayer
 import net.kunmc.lab.teamres.util.ex.TeamResEventEx
@@ -97,6 +98,13 @@ class Teamres : FlyLibPlugin() {
                     permission { commandSender, _, _, _ -> commandSender.isOp }
                 }
             }
+
+            part("teamGUI") {
+                terminal {
+                    execute(this@Teamres::teamGUI)
+                    permission { commandSender, _, _, _ -> commandSender.isOp }
+                }
+            }
         }
     }
 
@@ -123,6 +131,13 @@ class Teamres : FlyLibPlugin() {
     fun syncableGUI(e: FCommandEvent, str: String): Boolean {
         if (e.commandSender is Player) {
             SyncableControlGUI(flyLib, teamManager).gui.open(e.commandSender as Player)
+        }
+        return true
+    }
+
+    fun teamGUI(e: FCommandEvent, str: String): Boolean {
+        if (e.commandSender is Player) {
+            TeamControlGUI(flyLib, teamManager).gui.open(e.commandSender as Player)
         }
         return true
     }

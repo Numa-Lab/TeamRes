@@ -34,7 +34,13 @@ class SyncableControlGUI(override val flyLib: FlyLib, val teamManager: TeamManag
     }
 
     private fun updateGUI(entry: InventoryGUIEntry, index: Int) {
-        val syncable = Syncables.values().getOrNull(index) ?: return
+        val syncable = Syncables.values().getOrNull(index)
+        if (syncable == null) {
+            // No Syncable matched
+            // Set to empty
+            entry.itemStack = ItemData(Material.AIR).build()
+            return
+        }
         if (teamManager.teams().isEmpty()) {
             // No Team Registered
             return

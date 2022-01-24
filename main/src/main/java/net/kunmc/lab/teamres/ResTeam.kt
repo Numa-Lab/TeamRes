@@ -2,6 +2,7 @@ package net.kunmc.lab.teamres
 
 import net.kunmc.lab.teamres.syncable.Syncable
 import net.kunmc.lab.teamres.util.SessionSafePlayer
+import net.kyori.adventure.text.Component
 import org.bukkit.OfflinePlayer
 
 /**
@@ -37,4 +38,9 @@ interface ResTeam {
      * Effect this team
      */
     fun effect(syncable: Syncable, isOnOff: OnOff)
+
+    /**
+     * @return name of this team
+     */
+    fun name(): Component
 }

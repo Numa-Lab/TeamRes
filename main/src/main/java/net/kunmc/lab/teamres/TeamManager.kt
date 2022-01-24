@@ -127,6 +127,8 @@ final class ResTeamImpl(
         }
     }
 
+    override fun name() = teamName
+
     override fun toString(): String {
         if (this.teamName is TextComponent) {
             return this.teamName.content()
