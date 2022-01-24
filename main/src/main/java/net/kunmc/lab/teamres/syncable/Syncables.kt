@@ -20,6 +20,7 @@ enum class Syncables(
     Ban("BAN", lazyInit { BANSync(it.first, it.second) }),
     Effect("ポーション効果", lazyInit { net.kunmc.lab.teamres.syncable.EffectSync(it.first, it.second) }),
     Chat("チャット", lazyInit { net.kunmc.lab.teamres.syncable.ChatSync(it.first, it.second) }),
+    DeathSync("死", lazyInit { net.kunmc.lab.teamres.syncable.DeathSync(it.first, it.second) }),
     ;
 
     companion object {
