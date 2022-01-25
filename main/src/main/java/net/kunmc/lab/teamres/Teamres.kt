@@ -102,7 +102,6 @@ class Teamres : FlyLibPlugin() {
             part("teamGUI") {
                 terminal {
                     execute(this@Teamres::teamGUI)
-                    permission { commandSender, _, _, _ -> commandSender.isOp }
                 }
             }
         }
