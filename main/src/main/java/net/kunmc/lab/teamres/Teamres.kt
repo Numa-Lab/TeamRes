@@ -3,6 +3,8 @@ package net.kunmc.lab.teamres
 import com.flylib.flylib3.FlyLibPlugin
 import com.flylib.flylib3.event.ex.FCommandEvent
 import com.flylib.flylib3.util.command
+import com.flylib.flylib3.util.flyLibLogging
+import com.flylib.flylib3.util.infoLogging
 import net.kunmc.lab.teamres.gui.SyncableControlGUI
 import net.kunmc.lab.teamres.gui.TeamControlGUI
 import net.kunmc.lab.teamres.syncable.Syncables
@@ -20,6 +22,8 @@ class Teamres : FlyLibPlugin() {
     private val teamManager = TeamManager(flyLib)
 
     override fun enable() {
+        flyLibLogging = false   // Disable flylib logging
+        infoLogging = false     // Disable info logging
         TeamResEventEx(flyLib)
         command("teamres") {
 //            part<Syncables>(
