@@ -4,6 +4,7 @@ import com.flylib.flylib3.FlyLib
 import com.flylib.flylib3.FlyLibComponent
 import net.kunmc.lab.teamres.ResTeam
 import net.kunmc.lab.teamres.ResTeamImpl
+import net.kunmc.lab.teamres.ResTeamImpl2
 import net.kunmc.lab.teamres.TeamManager
 import net.kunmc.lab.teamres.syncable.Syncable
 import net.kunmc.lab.teamres.util.SessionSafePlayer
@@ -18,7 +19,7 @@ open class BaseSync(override val flyLib: FlyLib, open val teamManager: TeamManag
     /**
      * @return Pair(Player,Team)
      */
-    fun getWithPlayer(p: Player): Pair<Player, ResTeamImpl>? {
+    fun getWithPlayer(p: Player): Pair<Player, ResTeamImpl2>? {
         val sf = SessionSafePlayer(p)
         if (!syncedPlayer.contains(sf)) return null
         else {
@@ -31,7 +32,7 @@ open class BaseSync(override val flyLib: FlyLib, open val teamManager: TeamManag
         }
     }
 
-    fun getWithSessionSafePlayer(p: SessionSafePlayer): Pair<SessionSafePlayer, ResTeamImpl>? {
+    fun getWithSessionSafePlayer(p: SessionSafePlayer): Pair<SessionSafePlayer, ResTeamImpl2>? {
         if (!syncedPlayer.contains(p)) {
             return null
         } else {

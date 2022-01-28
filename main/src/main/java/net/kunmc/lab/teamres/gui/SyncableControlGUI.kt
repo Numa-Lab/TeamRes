@@ -41,14 +41,8 @@ class SyncableControlGUI(override val flyLib: FlyLib, val teamManager: TeamManag
             entry.itemStack = ItemData(Material.AIR).build()
             return
         }
-        if (teamManager.teams().isEmpty()) {
-            // No Team Registered
-            return
-        } else {
-            val team = teamManager.teams().first()
-            val onOff = OnOff(team.affected().contains(syncable.lazy.get(Pair(flyLib, teamManager))))
-            updateGUI(entry, syncable, onOff)
-        }
+        val onOff = OnOff(teamManager.activeSyncable.contains(syncable.lazy.get(Pair(flyLib, teamManager))))
+        updateGUI(entry, syncable, onOff)
     }
 
     private fun updateGUI(entry: InventoryGUIEntry, syncable: Syncables, onOff: OnOff) {
@@ -70,9 +64,7 @@ class SyncableControlGUI(override val flyLib: FlyLib, val teamManager: TeamManag
 
     private fun onCall(syncable: Syncables, toggledState: OnOff) {
         info("onCall: ToggledState:${toggledState},Syncable:${syncable}")
-        teamManager.teams().forEach {
-            it.effect(syncable.lazy.get(Pair(flyLib, teamManager)), toggledState)
-        }
+        teamManager.setSync(syncable.lazy.get(Pair(flyLib, teamManager)), toggledState)
         updateGUI()
     }
 }

@@ -13,6 +13,7 @@ import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.scoreboard.Team
 import kotlin.reflect.full.createType
 
 class Teamres : FlyLibPlugin() {
@@ -21,89 +22,79 @@ class Teamres : FlyLibPlugin() {
     override fun enable() {
         TeamResEventEx(flyLib)
         command("teamres") {
-            part<Syncables>(
-                Syncables::class.createType(),
-                { _: CommandSender, _: Command, _: String, _: Array<out String> ->
-                    Syncables.values().toList()
-                },
-                {
-                    Syncables.getByString(it)
-                },
-                { true }
-            ) {
-                part<OnOff>(
-                    OnOff::class.createType(),
-                    { _: CommandSender, _: Command, _: String, _: Array<out String> -> listOf(OnOff.ON, OnOff.OFF) },
-                    { OnOff.getByString(it) },
-                    lazyMatcher = { true }
-                ) {
+//            part<Syncables>(
+//                Syncables::class.createType(),
+//                { _: CommandSender, _: Command, _: String, _: Array<out String> ->
+//                    Syncables.values().toList()
+//                },
+//                {
+//                    Syncables.getByString(it)
+//                },
+//                { true }
+//            ) {
+//                part<OnOff>(
+//                    OnOff::class.createType(),
+//                    { _: CommandSender, _: Command, _: String, _: Array<out String> -> listOf(OnOff.ON, OnOff.OFF) },
+//                    { OnOff.getByString(it) },
+//                    lazyMatcher = { true }
+//                ) {
+//                    terminal {
+//                        execute(this@Teamres::setSync)
+//                        permission { commandSender, _, _, _ -> commandSender.isOp }
+//                    }
+//                }
+//            }
+//
+//            part<String>("addToTeam") {
+//                part<ResTeam>(
+//                    ResTeam::class.createType(),
+//                    { _: CommandSender, _: Command, _: String, _: Array<out String> -> teamManager.teams() },
+//                    { teamManager.getTeamByName(it) },
+//                    lazyMatcher = { true }
+//                ) {
+//                    part<Player>(
+//                        Player::class.createType(),
+//                        lazyValues = { _: CommandSender, _: Command, _: String, _: Array<out String> ->
+//                            Bukkit.getOnlinePlayers().toList()
+//                        },
+//                        lazyParser = { Bukkit.getOnlinePlayers().find { p -> p.name == it } },
+//                        lazyTabCompleter = { it.name },
+//                        lazyMatcher = { true }) {
+//                        terminal {
+//                            execute(this@Teamres::addToTeam)
+//                            permission { commandSender, _, _, _ -> commandSender.isOp }
+//                        }
+//                    }
+//                }
+//            }
+
+            part("registerTeam") {
+                part<Team>(
+                    Team::class.createType(),
+                    lazyValues = { _: CommandSender, _: Command, _: String, _: Array<out String> -> Bukkit.getScoreboardManager().mainScoreboard.teams.toList() },
+                    lazyParser = { Bukkit.getScoreboardManager().mainScoreboard.teams.first { t -> it == t.name } },
+                    lazyTabCompleter = { it.name },
+                    lazyMatcher = { true }) {
                     terminal {
-                        // TODO Set State of Syncable
-                        execute(this@Teamres::setSync)
+                        execute(this@Teamres::registerTeam)
                         permission { commandSender, _, _, _ -> commandSender.isOp }
                     }
                 }
             }
 
-            part<String>("addToTeam") {
-                part<ResTeam>(
-                    ResTeam::class.createType(),
-                    { _: CommandSender, _: Command, _: String, _: Array<out String> -> teamManager.teams() },
-                    { teamManager.getTeamByName(it) },
-                    lazyMatcher = { true }
-                ) {
-                    part<Player>(
-                        Player::class.createType(),
-                        lazyValues = { _: CommandSender, _: Command, _: String, _: Array<out String> ->
-                            Bukkit.getOnlinePlayers().toList()
-                        },
-                        lazyParser = { Bukkit.getOnlinePlayers().find { p -> p.name == it } },
-                        lazyTabCompleter = { it.name },
-                        lazyMatcher = { true }) {
-                        terminal {
-                            execute(this@Teamres::addToTeam)
-                            permission { commandSender, _, _, _ -> commandSender.isOp }
-                        }
-                    }
-                }
-            }
-
-            part("registerTeam") {
-                part<String>(
-                    String::class.createType(),
-                    lazyValues = { _: CommandSender, _: Command, _: String, _: Array<out String> -> listOf("teamname") },
-                    lazyParser = { it },
-                    lazyTabCompleter = { it },
-                    lazyMatcher = { true }) {
-                    part<Player>(
-                        Player::class.createType(),
-                        lazyValues = { _: CommandSender, _: Command, _: String, _: Array<out String> ->
-                            Bukkit.getOnlinePlayers().toList()
-                        },
-                        lazyTabCompleter = { it.name },
-                        lazyParser = { Bukkit.getOnlinePlayers().find { p -> p.name == it } },
-                        lazyMatcher = { true }
-                    ) {
-                        terminal {
-                            execute(this@Teamres::registerTeam)
-                            permission { commandSender, _, _, _ -> commandSender.isOp }
-                        }
-                    }
-                }
-            }
-
-            part("syncableGUI") {
+            part("gui") {
                 terminal {
                     execute(this@Teamres::syncableGUI)
                     permission { commandSender, _, _, _ -> commandSender.isOp }
                 }
             }
 
-            part("teamGUI") {
-                terminal {
-                    execute(this@Teamres::teamGUI)
-                }
-            }
+//            part("teamGUI") {
+//                terminal {
+//                    execute(this@Teamres::teamGUI)
+//                    permission { _, _, _, _ -> true }
+//                }
+//            }
         }
     }
 
@@ -118,9 +109,9 @@ class Teamres : FlyLibPlugin() {
         return true
     }
 
-    fun registerTeam(e: FCommandEvent, str: String, teamName: String, member: Player): Boolean {
-        teamManager.genTeam(Component.text(teamName), SessionSafePlayer(member))
-        e.commandSender.sendMessage("Team:${teamName} is registered with first member:${member}")
+    fun registerTeam(e: FCommandEvent, str: String, team: Team): Boolean {
+        teamManager.genTeam(team.name)
+        e.commandSender.sendMessage("Team:${team.name} is registered.")
         return true
     }
 

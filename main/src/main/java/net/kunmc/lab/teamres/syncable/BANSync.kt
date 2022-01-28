@@ -4,6 +4,7 @@ import com.flylib.flylib3.FlyLib
 import com.flylib.flylib3.util.info
 import com.flylib.flylib3.util.ready
 import net.kunmc.lab.teamres.ResTeamImpl
+import net.kunmc.lab.teamres.ResTeamImpl2
 import net.kunmc.lab.teamres.TeamManager
 import net.kunmc.lab.teamres.syncable.base.BaseSync
 import net.kunmc.lab.teamres.util.SessionSafePlayer
@@ -27,14 +28,17 @@ class BANSync(override val flyLib: FlyLib, override val teamManager: TeamManager
         syncBanned(p.second, SessionSafePlayer(e.p), true)
     }
 
-    private fun syncBanned(team: ResTeamImpl, bannedPlayer: SessionSafePlayer, isBanned: Boolean) {
+    // TODO リログしようとしたときの表示が怪しい
+    private fun syncBanned(team: ResTeamImpl2, bannedPlayer: SessionSafePlayer, isBanned: Boolean) {
         val name = bannedPlayer.offlinePlayer().name
-        team.all().forEach {
-            if (isBanned)
-                it.offlinePlayer().banPlayer("${name}がBANされました")
-            else
-                it.unban(flyLib)
-        }
+        team.all()
+            .filter { it != bannedPlayer }
+            .forEach {
+                if (isBanned)
+                    it.offlinePlayer().banPlayer("${name}がBANされました")
+                else
+                    it.unban(flyLib)
+            }
     }
 
     @EventHandler

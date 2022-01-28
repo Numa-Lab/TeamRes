@@ -27,6 +27,7 @@ class DeathSync(flyLib: FlyLib, teamManager: TeamManager) : BaseSync(flyLib, tea
                 Component.text("${e.entity.name}は${killedByTeam[SessionSafePlayer(e.entity)]!!}")
                     .append(Component.text("が死んだので連帯責任を負った"))
             )
+            killedByTeam.remove(SessionSafePlayer(e.entity))
         } else {
             val p = getWithPlayer(e.entity) ?: return
             p.second.all()

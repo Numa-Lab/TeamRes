@@ -20,7 +20,7 @@ class ChatSync(flyLib: FlyLib, teamManager: TeamManager) : BaseSync(flyLib, team
     @EventHandler
     fun onChat(e: AsyncChatEvent) {
         val p = getWithPlayer(e.player) ?: return
-        setChatRenderer(e, p.second.teamName)
+        setChatRenderer(e, p.second.name())
     }
 
     private fun setChatRenderer(e: AsyncChatEvent, teamName: Component) {

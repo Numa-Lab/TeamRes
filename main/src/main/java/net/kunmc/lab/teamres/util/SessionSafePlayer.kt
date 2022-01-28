@@ -15,7 +15,6 @@ class SessionSafePlayer(val uuid: UUID) {
     constructor(p: Player) : this(p.uniqueId)
     constructor(offP: OfflinePlayer) : this(offP.uniqueId)
 
-
     fun player(): Player? = Bukkit.getPlayer(uuid)
     fun offlinePlayer(): OfflinePlayer = Bukkit.getOfflinePlayer(uuid)
     val isOnline: Boolean
@@ -58,4 +57,15 @@ class SessionSafePlayer(val uuid: UUID) {
         // Not Implemented for IPBan
     }
     /////// BAN ///////
+
+    /////// Name //////
+    fun name(): String? {
+        val p = player()
+        return if (p != null) {
+            p.name
+        } else {
+            offlinePlayer().name
+        }
+    }
+    /////// Name //////
 }

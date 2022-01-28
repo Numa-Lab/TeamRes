@@ -17,6 +17,7 @@ interface ResTeam {
     /**
      * @return all members in this team that are online
      */
+    @Deprecated("Use all() instead", ReplaceWith("all()"))
     fun getMembers(): List<SessionSafePlayer>
 
     /**
@@ -32,11 +33,13 @@ interface ResTeam {
     /**
      * @return all affected syncable entry
      */
+    @Deprecated("Use TeamManager instead.")
     fun affected(): List<Syncable>
 
     /**
      * Effect this team
      */
+    @Deprecated("Use TeamManager instead.")
     fun effect(syncable: Syncable, isOnOff: OnOff)
 
     /**

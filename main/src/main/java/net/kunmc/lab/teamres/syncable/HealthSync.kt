@@ -5,6 +5,7 @@ import com.flylib.flylib3.util.info
 import com.flylib.flylib3.util.nextTick
 import com.flylib.flylib3.util.ready
 import net.kunmc.lab.teamres.ResTeamImpl
+import net.kunmc.lab.teamres.ResTeamImpl2
 import net.kunmc.lab.teamres.TeamManager
 import net.kunmc.lab.teamres.syncable.base.BaseSync
 import net.kunmc.lab.teamres.util.SessionSafePlayer
@@ -39,7 +40,7 @@ class HealthSync(flyLib: FlyLib, teamManager: TeamManager) : BaseSync(flyLib, te
         syncHealth(pair)
     }
 
-    private fun syncHealth(pair: Pair<Player, ResTeamImpl>) {
+    private fun syncHealth(pair: Pair<Player, ResTeamImpl2>) {
         /**
          * Potion damage is reflected next tick
          */
