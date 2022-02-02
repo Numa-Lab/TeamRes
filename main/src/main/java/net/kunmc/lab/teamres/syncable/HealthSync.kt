@@ -48,8 +48,8 @@ class HealthSync(flyLib: FlyLib, teamManager: TeamManager) : BaseSync(flyLib, te
             val onlinePlayers = pair.second.all()
                 .filter { it != SessionSafePlayer(pair.first) && it.isOnline }
                 .map { it.player()!! }
-
-            val maxHealth = onlinePlayers.maxOf { it.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value }
+            if (onlinePlayers.isEmpty()) return@nextTick
+            val maxHealth = onlinePlayers.maxOfOrNull { it.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value }!!
 
             // Syncing Health and MaxHealth
             onlinePlayers.forEach {
