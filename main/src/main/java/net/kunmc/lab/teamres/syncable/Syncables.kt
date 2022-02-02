@@ -22,6 +22,7 @@ enum class Syncables(
     Chat("チャット", lazyInit { net.kunmc.lab.teamres.syncable.ChatSync(it.first, it.second) }),
     DeathSync("死", lazyInit { net.kunmc.lab.teamres.syncable.DeathSync(it.first, it.second) }),
     JumpSync("ジャンプ", lazyInit { net.kunmc.lab.teamres.syncable.JumpSync(it.first, it.second) }),
+    EyeSync("視点", lazyInit { net.kunmc.lab.teamres.syncable.EyeSync(it.first, it.second) }),
     ;
 
     companion object {

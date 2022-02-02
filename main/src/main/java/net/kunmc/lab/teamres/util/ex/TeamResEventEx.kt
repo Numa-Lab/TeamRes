@@ -17,6 +17,7 @@ import org.bukkit.event.entity.EntityPotionEffectEvent
 import org.bukkit.event.entity.EntityPotionEffectEvent.Action.*
 import org.bukkit.event.entity.EntityRegainHealthEvent
 import org.bukkit.event.player.PlayerCommandPreprocessEvent
+import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.server.ServerCommandEvent
 
@@ -142,5 +143,12 @@ class TeamResEventEx(override val flyLib: FlyLib) : FlyLibComponent, Listener {
                 e
             )
         )
+    }
+
+    @EventHandler
+    fun onEyeMoving(e: PlayerMoveEvent) {
+        if (e.hasChangedOrientation()) {
+            flyLib.event.callEvent(PlayerEyeMovingEvent(e))
+        }
     }
 }
