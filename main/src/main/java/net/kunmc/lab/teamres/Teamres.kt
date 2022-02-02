@@ -3,6 +3,7 @@ package net.kunmc.lab.teamres
 import com.flylib.flylib3.FlyLibPlugin
 import com.flylib.flylib3.event.ex.FCommandEvent
 import com.flylib.flylib3.util.command
+import com.flylib.flylib3.util.errorLogging
 import com.flylib.flylib3.util.flyLibLogging
 import com.flylib.flylib3.util.infoLogging
 import net.kunmc.lab.teamres.gui.SyncableControlGUI
@@ -24,6 +25,7 @@ class Teamres : FlyLibPlugin() {
     override fun enable() {
         flyLibLogging = false   // Disable flylib logging
         infoLogging = false     // Disable info logging
+        errorLogging = false    // Disable error logging
         TeamResEventEx(flyLib)
         command("teamres") {
 //            part<Syncables>(
