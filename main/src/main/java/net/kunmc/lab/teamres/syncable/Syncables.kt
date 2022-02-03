@@ -58,6 +58,14 @@ enum class Syncables(
             "注意:ジャンプはこれ単体では同期しません",
             "ジャンプの同期を入れない時はチームのほかの人が引っかかるので注意"
         ).map { Component.text(it) }),
+    InventorySync(
+        "インベントリ",
+        lazyInit { InventorySync(it.first, it.second) },
+        listOf(
+            "みんなのインベントリを連帯責任に!",
+            "みんなのインベントリが共同になります"
+        ).map { Component.text(it) }
+    )
     ;
 
     companion object {
