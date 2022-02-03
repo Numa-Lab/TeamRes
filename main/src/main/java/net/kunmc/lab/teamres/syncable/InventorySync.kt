@@ -17,6 +17,7 @@ import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.PlayerInventory
 
 class InventorySync(flyLib: FlyLib, teamManager: TeamManager) : BaseSync(flyLib, teamManager), Listener {
@@ -60,6 +61,11 @@ class InventorySync(flyLib: FlyLib, teamManager: TeamManager) : BaseSync(flyLib,
     @EventHandler
     fun onItemConsumed(e: PlayerItemConsumeEvent) {
         syncInventory(e.player, e.player.inventory)
+    }
+
+    @EventHandler
+    fun onOffHand(e:PlayerSwapHandItemsEvent){
+        syncInventory(e.player,e.player.inventory)
     }
 
     /**
