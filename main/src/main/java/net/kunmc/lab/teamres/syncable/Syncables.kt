@@ -48,15 +48,20 @@ enum class Syncables(
     EyeSync(
         "視点",
         lazyInit { EyeSync(it.first, it.second) },
-        listOf("視点移動を連帯責任に！", "チーム内の誰かが視点移動をするとほかのメンバーも同じ動きをします").map { Component.text(it) }),
+        listOf(
+            "視点移動を連帯責任に！",
+            "チーム内の誰かが視点移動をするとほかのメンバーも同じ動きをします",
+            "§e§n§l注意:かなりガクつきます",
+            "§c§n§l注意:ONにすると全員が止まらない限りこの画面は開けません"
+        ).map { Component.text(it) }),
     MoveSync(
         "移動",
         lazyInit { MoveSync(it.first, it.second) },
         listOf(
             "プレイヤーの移動を連帯責任に！",
             "チーム内の誰かが移動をするとほかのメンバーも同じ動きをします",
-            "注意:ジャンプはこれ単体では同期しません",
-            "ジャンプの同期を入れない時はチームのほかの人が引っかかるので注意"
+            "§e§n§l注意:かなりガクつきます",
+            "§c§n§l注意:ONにすると全員が止まらない限りこの画面は開けません",
         ).map { Component.text(it) }),
     InventorySync(
         "インベントリ",
