@@ -21,12 +21,12 @@ import kotlin.reflect.full.createType
 
 class Teamres : FlyLibPlugin() {
     private val teamManager = TeamManager(flyLib)
-
     override fun enable() {
         flyLibLogging = false   // Disable flylib logging
         infoLogging = false     // Disable info logging
         errorLogging = false    // Disable error logging
         TeamResEventEx(flyLib)
+        TeamResActionBar(teamManager, flyLib)
         command("teamres") {
 //            part<Syncables>(
 //                Syncables::class.createType(),
@@ -153,7 +153,7 @@ class Teamres : FlyLibPlugin() {
     }
 
     fun on(e: FCommandEvent, str: String): Boolean {
-        if (teamManager.teams().isEmpty()){
+        if (teamManager.teams().isEmpty()) {
             e.commandSender.sendMessage("チームが登録されていません")
             return true
         }
@@ -171,7 +171,7 @@ class Teamres : FlyLibPlugin() {
     }
 
     fun off(e: FCommandEvent, str: String): Boolean {
-        if (teamManager.teams().isEmpty()){
+        if (teamManager.teams().isEmpty()) {
             e.commandSender.sendMessage("チームが登録されていません")
             return true
         }
