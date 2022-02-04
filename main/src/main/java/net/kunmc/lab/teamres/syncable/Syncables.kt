@@ -23,39 +23,59 @@ enum class Syncables(
     Health(
         "体力",
         lazyInit { HealthSync(it.first, it.second) },
-        listOf("プレイヤーの体力を連帯責任に！", "チーム内で体力の増減少を同期！").map { Component.text(it) }),
+        listOf(
+            "体力を連帯責任に！",
+            "チーム内で体力の増減少を同期！"
+        ).map { Component.text(it) }),
     Ban(
         "BAN",
         lazyInit { BANSync(it.first, it.second) },
-        listOf("BANを連帯責任に！", "チーム内の誰かがBANされるとチーム内全員がBANされます!").map { Component.text(it) }),
+        listOf(
+            "BANを連帯責任に！",
+            "チーム内の誰かがBANされると",
+            "チーム全員がBANされます!"
+        ).map { Component.text(it) }),
     Effect(
         "ポーション効果",
         lazyInit { EffectSync(it.first, it.second) },
-        listOf("ポーション効果を連帯責任に！", "誰かがポーション効果を受けたとき/失ったとき", "ほかのチームメンバーにも同じことが起こります！").map { Component.text(it) }),
+        listOf(
+            "ポーション効果を連帯責任に！",
+            "誰かのポーション効果を",
+            "ほかのチームメンバーにも！"
+        ).map { Component.text(it) }),
     Chat(
         "チャット",
         lazyInit { ChatSync(it.first, it.second) },
         listOf(
             "チャットを連帯責任に！",
-            "チャットをすると名前の部分がチーム名になります",
-            "Tips:名前の部分にマウスカーソルを合わせると発言者がわかります"
+            "チャットをすると名前がチーム名に！",
+            "§b名前の部分にマウスカーソルを合わせると..."
         ).map { Component.text(it) }),
     DeathSync(
-        "死",
+        "死亡",
         lazyInit { DeathSync(it.first, it.second) },
-        listOf("プレイヤーの死を連帯責任に！", "チーム内の誰かが死ぬとほかのメンバー全員が死にます").map { Component.text(it) }),
+        listOf(
+            "死を連帯責任に！",
+            "チームの誰かが死ぬとメンバー全員が死！"
+        ).map { Component.text(it) }),
     JumpSync(
         "ジャンプ",
         lazyInit { JumpSync(it.first, it.second) },
-        listOf("プレイヤーのジャンプを連帯責任に！", "チーム内の誰かがジャンプするとほかのメンバーもジャンプします").map { Component.text(it) }),
+        listOf(
+            "ジャンプを連帯責任に！",
+            "チームの誰かがジャンプすると",
+            "ほかのメンバーもジャンプします"
+        ).map { Component.text(it) }),
     EyeSync(
         "視点",
         lazyInit { EyeSync(it.first, it.second) },
         listOf(
             "視点移動を連帯責任に！",
-            "チーム内の誰かが視点移動をするとほかのメンバーも同じ動きをします",
+            "チーム内の誰かが視点移動をすると",
+            "ほかのメンバーも同じ動きをします",
             "§e§n§l注意:かなりガクつきます",
-            "§c§n§l注意:ONにすると全員が止まらない限りこの画面は開けません"
+            "§c§n§l注意:ONにするとこの画面は開けません",
+            "§c§n§lOFF用:/teamres off",
         ).map { Component.text(it) },
         false
     ),
@@ -63,10 +83,12 @@ enum class Syncables(
         "移動",
         lazyInit { MoveSync(it.first, it.second) },
         listOf(
-            "プレイヤーの移動を連帯責任に！",
-            "チーム内の誰かが移動をするとほかのメンバーも同じ動きをします",
+            "移動を連帯責任に！",
+            "チーム内の誰かが移動をすると",
+            "ほかのメンバーも同じ動きをします",
             "§e§n§l注意:かなりガクつきます",
-            "§c§n§l注意:ONにすると全員が止まらない限りこの画面は開けません",
+            "§c§n§l注意:ONにするとこの画面は開けません",
+            "§c§n§lOFF用:/teamres off",
         ).map { Component.text(it) },
         false
     ),
@@ -74,8 +96,8 @@ enum class Syncables(
         "インベントリ",
         lazyInit { InventorySync(it.first, it.second) },
         listOf(
-            "みんなのインベントリを連帯責任に!",
-            "みんなのインベントリが共同になります"
+            "インベントリを連帯責任に!",
+            "インベントリが共同になります"
         ).map { Component.text(it) }
     )
     ;
