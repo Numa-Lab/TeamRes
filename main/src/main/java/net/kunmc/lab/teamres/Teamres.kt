@@ -95,6 +95,20 @@ class Teamres : FlyLibPlugin() {
                 }
             }
 
+            part("on") {
+                terminal {
+                    execute(this@Teamres::on)
+                    permission { commandSender, _, _, _ -> commandSender.isOp }
+                }
+            }
+
+            part("off") {
+                terminal {
+                    execute(this@Teamres::off)
+                    permission { commandSender, _, _, _ -> commandSender.isOp }
+                }
+            }
+
 //            part("teamGUI") {
 //                terminal {
 //                    execute(this@Teamres::teamGUI)
@@ -135,6 +149,36 @@ class Teamres : FlyLibPlugin() {
         if (e.commandSender is Player) {
             TeamControlGUI(flyLib, teamManager).gui.open(e.commandSender as Player)
         }
+        return true
+    }
+
+    fun on(e: FCommandEvent, str: String): Boolean {
+        if (teamManager.teams().isEmpty()){
+            e.commandSender.sendMessage("チームが登録されていません")
+            return true
+        }
+        Syncables.values().filter { it.isUseful }.map { it.lazy.get(Pair(flyLib, teamManager)) }.forEach {
+            teamManager.setSync(it, OnOff.ON)
+        }
+        val excepted = Syncables.values().filter { !it.isUseful }.map { it.displayName }
+        if (excepted.isNotEmpty()) {
+            val exceptedString = excepted.joinToString(limit = 100)
+            e.commandSender.sendMessage("すべてONにしました([${exceptedString}]はこの機能ではONにできません)")
+        } else {
+            e.commandSender.sendMessage("すべてONにしました")
+        }
+        return true
+    }
+
+    fun off(e: FCommandEvent, str: String): Boolean {
+        if (teamManager.teams().isEmpty()){
+            e.commandSender.sendMessage("チームが登録されていません")
+            return true
+        }
+        Syncables.values().map { it.lazy.get(Pair(flyLib, teamManager)) }.forEach {
+            teamManager.setSync(it, OnOff.OFF)
+        }
+        e.commandSender.sendMessage("すべてOFFにしました")
         return true
     }
 }

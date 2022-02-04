@@ -15,7 +15,10 @@ import net.kyori.adventure.text.Component
 enum class Syncables(
     val displayName: String,
     val lazy: LazyWithInit<Syncable, Pair<FlyLib, TeamManager>>,
-    val descriptions: List<Component> = listOf()
+    val descriptions: List<Component> = listOf(),
+    // 特にバグなく使えるかどうか
+    // falseだと一斉ONのコマンドでONにならない
+    val isUseful: Boolean = true
 ) {
     Health(
         "体力",
@@ -53,7 +56,9 @@ enum class Syncables(
             "チーム内の誰かが視点移動をするとほかのメンバーも同じ動きをします",
             "§e§n§l注意:かなりガクつきます",
             "§c§n§l注意:ONにすると全員が止まらない限りこの画面は開けません"
-        ).map { Component.text(it) }),
+        ).map { Component.text(it) },
+        false
+    ),
     MoveSync(
         "移動",
         lazyInit { MoveSync(it.first, it.second) },
@@ -62,7 +67,9 @@ enum class Syncables(
             "チーム内の誰かが移動をするとほかのメンバーも同じ動きをします",
             "§e§n§l注意:かなりガクつきます",
             "§c§n§l注意:ONにすると全員が止まらない限りこの画面は開けません",
-        ).map { Component.text(it) }),
+        ).map { Component.text(it) },
+        false
+    ),
     InventorySync(
         "インベントリ",
         lazyInit { InventorySync(it.first, it.second) },
