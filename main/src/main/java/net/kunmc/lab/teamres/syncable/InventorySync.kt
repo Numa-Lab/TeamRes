@@ -1,5 +1,6 @@
 package net.kunmc.lab.teamres.syncable
 
+import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent
 import com.flylib.flylib3.FlyLib
 import com.flylib.flylib3.util.nextTick
 import com.flylib.flylib3.util.warn
@@ -64,8 +65,13 @@ class InventorySync(flyLib: FlyLib, teamManager: TeamManager) : BaseSync(flyLib,
     }
 
     @EventHandler
-    fun onOffHand(e:PlayerSwapHandItemsEvent){
-        syncInventory(e.player,e.player.inventory)
+    fun onOffHand(e: PlayerSwapHandItemsEvent) {
+        syncInventory(e.player, e.player.inventory)
+    }
+
+    @EventHandler
+    fun onArmor(e: PlayerArmorChangeEvent) {
+        syncInventory(e.player, e.player.inventory)
     }
 
     /**
